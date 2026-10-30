@@ -1,0 +1,39 @@
+<!doctype html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<body>
+<aside th:fragment="sidebar(active)" id="app-sidebar" class="app-sidebar" aria-label="Application sidebar">
+    <a class="app-brand" th:href="@{/dashboard}" aria-label="Aero AI dashboard">
+        <span class="app-brand-mark" aria-hidden="true">A</span>
+        <span>AERO<span class="app-brand-accent">-AI</span><small>RESPIRATORY LAB</small></span>
+    </a>
+    <div class="app-nav-label">Workspace</div>
+    <nav class="app-nav" aria-label="Main navigation">
+        <a class="app-nav-link" th:classappend="${active == 'dashboard'} ? ' is-active'" th:href="@{/dashboard}" th:attr="aria-current=${active == 'dashboard' ? 'page' : null}"><span class="app-nav-icon">◈</span>Dashboard</a>
+        <a class="app-nav-link" th:classappend="${active == 'anatomy'} ? ' is-active'" th:href="@{/lab/anatomy}" th:attr="aria-current=${active == 'anatomy' ? 'page' : null}"><span class="app-nav-icon">♧</span>Respiratory Anatomy</a>
+        <a class="app-nav-link" th:classappend="${active == 'gas-exchange'} ? ' is-active'" th:href="@{/lab/gas-exchange}" th:attr="aria-current=${active == 'gas-exchange' ? 'page' : null}"><span class="app-nav-icon">◉</span>Gas Exchange Simulator</a>
+        <a class="app-nav-link" th:classappend="${active == 'circulation'} ? ' is-active'" th:href="@{/lab/circulation}" th:attr="aria-current=${active == 'circulation' ? 'page' : null}"><span class="app-nav-icon">♡</span>Blood &amp; Circulation</a>
+        <a class="app-nav-link" th:classappend="${active == 'analytics'} ? ' is-active'" th:href="@{/lab/analytics}" th:attr="aria-current=${active == 'analytics' ? 'page' : null}"><span class="app-nav-icon">⌁</span>Respiratory Intelligence</a>
+        <a class="app-nav-link" th:classappend="${active == 'device'} ? ' is-active'" th:href="@{/lab/device}" th:attr="aria-current=${active == 'device' ? 'page' : null}"><span class="app-nav-icon">▣</span>Virtual Respiratory Device</a>
+        <a class="app-nav-link" th:classappend="${active == 'integration'} ? ' is-active'" th:href="@{/lab/integration}" th:attr="aria-current=${active == 'integration' ? 'page' : null}"><span class="app-nav-icon">⇄</span>Human-Machine Integration Lab</a>
+        <a class="app-nav-link" th:classappend="${active == 'experiments'} ? ' is-active'" th:href="@{/lab/experiments}" th:attr="aria-current=${active == 'experiments' ? 'page' : null}"><span class="app-nav-icon">◇</span>Digital Twin &amp; Experiment Lab</a>
+        <a class="app-nav-link" href="/support/assessment"><span class="app-nav-icon">+</span>Symptom assessment</a>
+        <a class="app-nav-link" href="/support/assistant"><span class="app-nav-icon">?</span>Respiratory assistant</a>
+        <a class="app-nav-link" href="/support/knowledge"><span class="app-nav-icon">i</span>Knowledge centre</a>
+        <a class="app-nav-link" href="/support/air-quality"><span class="app-nav-icon">◌</span>Air quality</a>
+        <a class="app-nav-link" href="/support/medicines"><span class="app-nav-icon">+</span>Medicine safety</a>
+        <a class="app-nav-link" href="/support/notifications"><span class="app-nav-icon">◷</span>Notifications</a>
+        <a class="app-nav-link" href="/support/profile"><span class="app-nav-icon">○</span>My profile</a>
+    </nav>
+    <div class="app-sidebar-foot"><span class="app-status-dot"></span> EDUCATIONAL SIMULATION<br><span>Values are illustrative, not clinical.</span></div>
+</aside>
+<button th:fragment="scrim" class="app-sidebar-scrim" type="button" aria-label="Close navigation" tabindex="-1"></button>
+<header th:fragment="topbar(pageTitle)" class="app-topbar">
+    <div class="app-topbar-leading">
+        <button class="app-menu-toggle" type="button" aria-label="Open navigation" aria-expanded="false" aria-controls="app-sidebar">☰</button>
+        <div><div class="app-breadcrumb">AERO-AI <span>/</span> Workspace <span>/</span> <b th:text="${pageTitle}">Dashboard</b></div><div class="app-page-title" th:text="${pageTitle}">Dashboard</div></div>
+    </div>
+    <div class="app-topbar-user"><button type="button" class="theme-toggle" id="theme-toggle" aria-label="Switch color theme">Light mode</button><a href="/emergency" class="emergency-link">Emergency</a><span class="app-user-mark" aria-hidden="true">A</span><span th:text="${session.aeroName != null ? session.aeroName : 'Research workspace'}">Research workspace</span><a th:href="@{/logout}">Sign out</a></div>
+</header>
+<footer th:fragment="footer" class="aero-footer"><div><b>AERO-AI</b><span>Respiratory education and software simulations</span></div><nav aria-label="Footer navigation"><a href="/dashboard">Dashboard</a><a href="/support/assessment">Assessment</a><a href="/support/profile">My profile</a><a href="/emergency">Emergency guidance</a></nav><p>Educational use only. Not a medical device, diagnosis, or replacement for professional care. Help/contact: not configured.</p></footer>
+</body>
+</html>

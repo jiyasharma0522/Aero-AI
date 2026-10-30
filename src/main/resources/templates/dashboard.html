@@ -1,0 +1,106 @@
+<!doctype html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="theme-color" content="#07111f">
+    <title>Aero AI | Respiratory Dashboard</title>
+    <style>
+        :root{--bg:#07111f;--panel:#101e30;--line:#263b51;--text:#edf5ff;--muted:#98abc0;--cyan:#54e4e2;--blue:#739bff;--amber:#efc675}
+        *{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--text);font:15px/1.55 Inter,"Segoe UI",Arial,sans-serif}button,input{font:inherit}a{color:inherit;text-decoration:none}
+        main{width:min(1460px,100%);margin:auto;padding:28px clamp(16px,3vw,36px) 56px}.page-heading{display:flex;align-items:flex-start;justify-content:space-between;gap:20px;margin-bottom:20px}.eyebrow{color:var(--cyan);font-size:10px;font-weight:750;letter-spacing:.16em;text-transform:uppercase}.page-heading h1{margin:5px 0;font-size:clamp(25px,3vw,34px);line-height:1.2}.page-heading p{margin:0;color:var(--muted)}.demo-pill,.pill{display:inline-flex;align-items:center;gap:8px;padding:7px 10px;border:1px solid #735d35;border-radius:20px;background:#302819;color:#f1ce82;font-size:10px;font-weight:750;letter-spacing:.08em;white-space:nowrap}.pulse-dot{width:7px;height:7px;border-radius:50%;background:#f1c771}
+        .hero{display:grid;grid-template-columns:minmax(0,1fr) auto;align-items:center;gap:20px;padding:23px;border:1px solid #29475b;border-radius:17px;background:linear-gradient(115deg,#122b3b,#152039 70%,#202345);margin-bottom:18px}.hero h2{margin:5px 0 6px;font-size:20px}.hero p{margin:0;max-width:760px;color:#bccbda;font-size:13px}.hero-actions,.actions{display:flex;flex-wrap:wrap;gap:8px;align-items:center}.button{display:inline-flex;align-items:center;justify-content:center;min-height:39px;padding:9px 13px;border:1px solid transparent;border-radius:9px;background:linear-gradient(100deg,var(--cyan),#73c7f7);color:#061522;font-weight:750;font-size:12px;cursor:pointer;transition:transform .16s,border-color .16s}.button:hover{transform:translateY(-1px)}.button.secondary{border-color:#354a62;background:#1a2b40;color:var(--text)}.button:disabled{opacity:.5;cursor:not-allowed;transform:none}.sim-state{color:#b4c5d7;font-size:11px;min-width:150px}
+        .section-title{display:flex;justify-content:space-between;align-items:end;gap:12px;margin:25px 0 11px}.section-title h2{font-size:16px;margin:0}.section-title p{font-size:11px;color:var(--muted);margin:0}.metrics{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px}.card{min-width:0;padding:17px;border:1px solid var(--line);border-radius:14px;background:linear-gradient(145deg,#122237e8,#0c1929f2)}.metric-label{color:#a9b9cb;font-size:11px}.metric-value{margin:7px 0 2px;font-size:29px;font-weight:780;letter-spacing:-.03em}.metric-value.cyan{color:var(--cyan)}.metric-value.blue{color:#95b3ff}.unit{font-size:12px;color:var(--muted);font-weight:500}.metric-explain{color:var(--muted);font-size:10px;line-height:1.45}.simulated-label{display:inline-block;margin-top:8px;color:#ebc776;font-size:9px;font-weight:750;letter-spacing:.08em;text-transform:uppercase}
+        .modules{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:11px}.module-card{display:block;min-height:112px;padding:15px;border:1px solid var(--line);border-radius:13px;background:#0e1c2d;transition:transform .18s,border-color .18s,background .18s}.module-card:hover{transform:translateY(-2px);border-color:#3da1a9;background:#12283a}.module-number{display:block;color:#6f8da8;font-size:9px;font-weight:750;letter-spacing:.12em}.module-card strong{display:block;margin:7px 0 5px;color:#dcf8fb;font-size:12px}.module-card span:last-child{display:block;color:var(--muted);font-size:10px;line-height:1.45}.module-icon{float:right;color:var(--cyan);font-size:19px}
+        .content-grid{display:grid;grid-template-columns:minmax(0,1.3fr) minmax(300px,.7fr);gap:13px}.card-head{display:flex;justify-content:space-between;align-items:flex-start;gap:12px;margin-bottom:12px}.card-head h2{margin:0;font-size:14px}.card-head p{margin:3px 0 0;color:var(--muted);font-size:10px}.chart{display:block;width:100%;height:200px}.chart-label{fill:#8195a9;font-size:11px}.chart-empty{padding:22px 8px;color:var(--muted);font-size:12px;text-align:center}.status-row{display:flex;justify-content:space-between;gap:12px;padding:10px 0;border-bottom:1px solid #213449;color:#aebdd0;font-size:11px}.status-row:last-child{border:0}.status-row strong{color:var(--cyan);font-weight:650}.alert-box{margin-top:12px;padding:12px 13px;border:1px solid #27666d;border-radius:10px;background:#103039;color:#bde9e6;font-size:11px}.alert-box.warn{border-color:#7a6035;background:#302819;color:#f1d49d}.alert-box strong{display:block;margin-bottom:3px}
+        .table-wrap{width:100%;overflow:auto}.data-table{width:100%;border-collapse:collapse;min-width:520px;font-size:11px}.data-table th,.data-table td{padding:9px 8px;border-bottom:1px solid #22364b;text-align:left;white-space:nowrap}.data-table th{color:#91a5ba;font-size:9px;text-transform:uppercase;letter-spacing:.07em}.data-table td{color:#d6e1ed}.empty-state{padding:16px 10px;border:1px dashed #344a61;border-radius:9px;color:var(--muted);font-size:11px;text-align:center}.lower-grid{display:grid;grid-template-columns:1fr 1fr;gap:13px}.reading-form{display:grid;grid-template-columns:repeat(3,1fr);gap:9px}.field label{display:block;margin-bottom:4px;color:#98abc0;font-size:10px}.field input{width:100%;height:37px;padding:0 9px;border:1px solid #344a61;border-radius:8px;background:#091827;color:var(--text)}.reading-form .button{grid-column:1/-1}.notice{margin-top:17px;padding:12px 14px;border-left:3px solid var(--amber);border-radius:0 9px 9px 0;background:#211f1a;color:#e0d3bb;font-size:10px;line-height:1.6}.message{min-height:16px;color:var(--muted);font-size:10px}
+        @media(max-width:1050px){.modules{grid-template-columns:repeat(3,minmax(0,1fr))}.content-grid{grid-template-columns:1fr 1fr}}
+        @media(max-width:760px){main{padding-top:20px}.hero{grid-template-columns:1fr}.metrics{grid-template-columns:repeat(2,minmax(0,1fr))}.modules{grid-template-columns:repeat(2,minmax(0,1fr))}.content-grid,.lower-grid{grid-template-columns:1fr}.page-heading{flex-direction:column}.hero-actions{align-items:flex-start}}
+        @media(max-width:420px){.metrics{gap:8px}.card{padding:13px}.metric-value{font-size:25px}.module-card{min-height:118px;padding:12px}.reading-form{grid-template-columns:1fr 1fr}}
+        @media(prefers-reduced-motion:reduce){*,*::before,*::after{animation-duration:.01ms!important;transition:none!important}}
+    </style>
+    <link rel="stylesheet" th:href="@{/css/app-shell.css}">
+    <link rel="stylesheet" th:href="@{/css/feature-tools.css}">
+<link rel="stylesheet" href="/css/theme.css">
+<script>(function(){try{var t=localStorage.getItem("aero-theme");if(t==="light"||t==="dark")document.documentElement.dataset.theme=t;}catch(e){}})();</script>
+</head>
+<body>
+<div class="app-layout">
+    <aside th:replace="~{fragments/app-shell :: sidebar(${activeModule})}"></aside>
+    <button th:replace="~{fragments/app-shell :: scrim}"></button>
+    <div class="app-main">
+        <header th:replace="~{fragments/app-shell :: topbar(${appPageTitle})}"></header>
+        <main>
+            <section class="page-heading" aria-labelledby="dashboard-title">
+                <div><div class="eyebrow">Respiratory research workspace</div><h1 id="dashboard-title">Your respiratory overview</h1><p th:text="${firstName != null ? 'Welcome back, ' + firstName + '. Explore the simulated models and saved learning sessions.' : 'Explore simulated respiratory models and saved learning sessions.'}">Explore simulated respiratory models and saved learning sessions.</p></div>
+                <div class="actions"><a class="button secondary" href="/support/assessment">Start symptom assessment</a><a class="button" style="background:#9d3c35;color:#fff" href="/emergency">Emergency help · 112</a><span class="demo-pill"><span class="pulse-dot"></span> SIMULATED DATA ONLY</span></div>
+            </section>
+
+            <section class="hero" aria-label="Simulation controls">
+                <div><div class="eyebrow">Learning mode · No sensor connected</div><h2>Run a respiratory scenario</h2><p>Start the deterministic teaching simulation, pause it to inspect the sample values, then save a reading only when you choose. Simulation samples are labeled explicitly; manual measurements are marked as user-entered and unverified.</p></div>
+                <div class="hero-actions"><button class="button" type="button" id="sim-start">Start simulation</button><button class="button secondary" type="button" id="sim-pause">Pause</button><button class="button secondary" type="button" id="sim-resume">Resume</button><button class="button secondary" type="button" id="sim-reset">Reset</button><button class="button secondary" type="button" id="sim-save">Save sample</button><span class="sim-state" id="sim-state" aria-live="polite">Simulation paused</span></div>
+            </section>
+
+
+            <section aria-labelledby="indicator-title">
+                <div class="section-title"><h2 id="indicator-title">Modeled indicators</h2><p>Each value is illustrative and not a patient measurement.</p></div>
+                <div class="metrics">
+                    <article class="card"><div class="metric-label">Oxygen saturation · SpO₂</div><div class="metric-value cyan"><span id="spo2-value">98</span><span class="unit"> %</span></div><div class="metric-explain">A teaching example of the share of oxygen-carrying hemoglobin.</div><span class="simulated-label">Simulated value</span></article>
+                    <article class="card"><div class="metric-label">Breathing rate</div><div class="metric-value blue"><span id="breathing-value">16</span><span class="unit"> breaths/min</span></div><div class="metric-explain">The modeled number of breathing cycles each minute.</div><span class="simulated-label">Simulated value</span></article>
+                    <article class="card"><div class="metric-label">Pulse rate</div><div class="metric-value"><span id="pulse-value">72</span><span class="unit"> BPM</span></div><div class="metric-explain">A simple pulse indicator paired with the model output.</div><span class="simulated-label">Simulated value</span></article>
+                    <article class="card"><div class="metric-label">Minute ventilation estimate</div><div class="metric-value cyan"><span id="ventilation-value">8.0</span><span class="unit"> L/min</span></div><div class="metric-explain">Modeled rate × assumed 500 mL per breath.</div><span class="simulated-label">Educational calculation</span></article>
+                </div>
+            </section>
+
+            <section aria-labelledby="modules-title">
+                <div class="section-title"><h2 id="modules-title">Explore the learning labs</h2><p>Seven focused modules, one shared workspace.</p></div>
+                <div class="modules">
+                    <a class="module-card" href="/lab/anatomy"><span class="module-icon">♧</span><span class="module-number">LAB 01</span><strong>Respiratory Anatomy</strong><span>Trace airflow and explore the structures.</span></a>
+                    <a class="module-card" href="/lab/gas-exchange"><span class="module-icon">◉</span><span class="module-number">LAB 02</span><strong>Gas Exchange Simulator</strong><span>Model conceptual diffusion across the alveolus.</span></a>
+                    <a class="module-card" href="/lab/circulation"><span class="module-icon">♡</span><span class="module-number">LAB 03</span><strong>Blood &amp; Circulation</strong><span>Follow pulmonary and systemic pathways.</span></a>
+                    <a class="module-card" href="/lab/analytics"><span class="module-icon">⌁</span><span class="module-number">LAB 04</span><strong>Respiratory Intelligence</strong><span>Review stored samples and explainable rules.</span></a>
+                    <a class="module-card" href="/lab/device"><span class="module-icon">▣</span><span class="module-number">LAB 05</span><strong>Virtual Respiratory Device</strong><span>Explore four simulated device concepts.</span></a>
+                    <a class="module-card" href="/lab/integration"><span class="module-icon">⇄</span><span class="module-number">LAB 06</span><strong>Human-Machine Integration</strong><span>Connect model inputs to interpretation.</span></a>
+                    <a class="module-card" href="/lab/experiments"><span class="module-icon">◇</span><span class="module-number">LAB 07</span><strong>Digital Twin &amp; Experiment Lab</strong><span>Run, save, compare, and export model scenarios.</span></a>
+                </div>
+            </section>
+
+            <section class="content-grid" aria-label="Trend and learning status">
+                <article class="card">
+                    <div class="card-head"><div><h2>Measured SpO₂ trend</h2><p>Only samples marked “user measured”; not independently verified.</p></div><span class="pill" id="trend-count">0 samples</span></div>
+                    <div id="trend-empty" class="chart-empty">No user-entered measurements saved yet. The chart excludes simulated and unclassified samples.</div>
+                    <svg id="respiratory-chart" class="chart" viewBox="0 0 600 190" role="img" aria-label="Chart of user-entered oxygen saturation samples" hidden>
+                        <g stroke="#293b50" stroke-width="1"><line x1="45" y1="25" x2="580" y2="25"/><line x1="45" y1="65" x2="580" y2="65"/><line x1="45" y1="105" x2="580" y2="105"/><line x1="45" y1="145" x2="580" y2="145"/></g>
+                        <text class="chart-label" x="4" y="29">100%</text><text class="chart-label" x="12" y="69">90%</text><text class="chart-label" x="12" y="109">80%</text>
+                        <path id="chart-area" fill="#54e4e222" d=""/><polyline id="chart-line" points="" fill="none" stroke="#54e4e2" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/><g id="chart-points" fill="#07111f" stroke="#54e4e2" stroke-width="3"></g>
+                    </svg>
+                </article>
+                <article class="card">
+                    <div class="card-head"><div><h2>Transparent demo alert</h2><p>Rule check for the latest saved sample.</p></div><span class="pill">RULE BASED</span></div>
+                    <div class="status-row"><span>Sample source</span><strong>User-entered simulation</strong></div><div class="status-row"><span>Oxygen threshold</span><strong>Configurable</strong></div><div class="status-row"><span>Rate threshold</span><strong>Configurable</strong></div>
+                    <div class="alert-thresholds"><label>SpO₂ below<input id="dash-alert-spo2" type="number" min="50" max="100" value="94">%</label><label>Rate above<input id="dash-alert-rate" type="number" min="1" max="80" value="22">/min</label><label>Pulse below<input id="dash-alert-pulse-low" type="number" min="20" max="250" value="50">BPM</label><label>Pulse above<input id="dash-alert-pulse-high" type="number" min="20" max="250" value="120">BPM</label></div><button id="run-dashboard-alerts" class="button secondary" type="button">Evaluate latest saved sample</button>
+                    <div id="dashboard-alert" class="alert-box" aria-live="polite"><strong>Waiting for a saved sample</strong>Save a simulated sample to see which configured demonstration rule matches.</div>
+                    <div class="actions" style="margin-top:12px"><a class="button secondary" href="/lab/analytics">Review analytics</a><a class="button secondary" href="/lab/anatomy">Explore anatomy</a><a class="button secondary" href="/lab/gas-exchange">Run gas exchange</a></div>
+                </article>
+            </section>
+
+            <section class="lower-grid" style="margin-top:13px" aria-label="Recent saved learning sessions">
+                <article class="card"><div class="card-head"><div><h2>Recent readings</h2><p>Stored in this application's reading history.</p></div><a class="button secondary" href="/lab/analytics">All analytics</a></div><div id="recent-reading-empty" class="empty-state">Loading saved readings…</div><div class="table-wrap"><table class="data-table" id="recent-reading-table" hidden><thead><tr><th>Saved</th><th>SpO₂</th><th>Rate</th><th>Pulse</th><th>Source</th><th>Modeled ventilation</th></tr></thead><tbody id="recent-reading-body"></tbody></table></div></article>
+                <article class="card"><div class="card-head"><div><h2>Recent experiment runs</h2><p>Saved digital twin scenarios from the experiment lab.</p></div><a class="button secondary" href="/lab/experiments">Run experiment</a></div><div id="recent-experiment-empty" class="empty-state">Loading experiment history…</div><div class="table-wrap"><table class="data-table" id="recent-experiment-table" hidden><thead><tr><th>Scenario</th><th>Rate</th><th>Volume</th><th>Estimate</th><th>Saved</th></tr></thead><tbody id="recent-experiment-body"></tbody></table></div></article>
+            </section>
+
+            <section class="lower-grid" style="margin-top:13px" aria-label="Save an educational sample">
+                <article class="card"><div class="card-head"><div><h2>Save a custom sample</h2><p>Values are validated; choose whether this is a simulation or your own measurement.</p></div></div><label for="reading-origin">Reading source</label><select id="reading-origin"><option value="SIMULATED">Simulated example</option><option value="USER_MEASURED">I measured this myself (not device verified)</option></select><form class="reading-form" id="reading-form"><div class="field"><label for="reading-spo2">SpO₂ (%)</label><input id="reading-spo2" name="spo2" type="number" min="50" max="100" value="98" required></div><div class="field"><label for="reading-rate">Breathing rate (/min)</label><input id="reading-rate" name="breathingRate" type="number" min="1" max="80" value="16" required></div><div class="field"><label for="reading-pulse">Pulse (BPM)</label><input id="reading-pulse" name="pulse" type="number" min="20" max="250" value="72" required></div><button class="button" type="submit">Save simulated reading</button></form><p class="message" id="reading-message" role="status" aria-live="polite"></p></article>
+                <article class="card"><div class="card-head"><div><h2>Learning session shortcuts</h2><p>Jump directly into an activity.</p></div></div><div class="actions"><a class="button" href="/lab/anatomy">Guided airflow journey</a><a class="button secondary" href="/lab/gas-exchange">Gas diffusion presets</a><a class="button secondary" href="/lab/circulation">Follow circulation</a><a class="button secondary" href="/lab/device">Compare devices</a></div><div class="alert-box" style="margin-top:14px"><strong>About the numbers</strong>SpO₂, respiratory rate, pulse, and ventilation here are software-generated teaching values. They are not validated physiological outputs.</div></article>
+            </section>
+
+            <div class="notice"><strong>Educational use only.</strong> Aero AI is not a medical device, diagnostic tool, patient digital twin, emergency monitor, or replacement for professional advice. No physical sensor or respiratory device is connected.</div>
+        </main>
+        <footer th:replace="~{fragments/app-shell :: footer}"></footer>
+    </div>
+</div>
+<script th:src="@{/js/app-shell.js}"></script>
+<script th:src="@{/js/dashboard.js}"></script>
+<script th:src="@{/js/feature-tools.js}"></script>
+</body>
+</html>
